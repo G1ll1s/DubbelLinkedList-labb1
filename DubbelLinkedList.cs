@@ -31,22 +31,22 @@ namespace Egen_länkad_lista_lab
         }
 
         // this method is used to add a new node to the list at the beginning
-        //public void AddFirst(T data)
-        //{
-        //    Node<T> newNode = new Node<T>(data);
-        //    if (head == null)
-        //    {
-        //        head = newNode;
-        //        tail = newNode;
-        //    }
-        //    else
-        //    {
-        //        newNode.Next = head;
-        //        head.previous = newNode;
-        //        head = newNode;
-        //    }
-        //    count++;
-        //}
+        public void AddFirst(T data)
+        {
+            Node<T> newNode = new Node<T>(data);
+            if (head == null)
+            {
+                head = newNode;
+                tail = newNode;
+            }
+            else
+            {
+                newNode.Next = head;
+                head.previous = newNode;
+                head = newNode;
+            }
+            count++;
+        }
 
         // Denna methoden är för att lägga till en ny nod i listan i slutet
         public void AddLast(T data)
@@ -263,13 +263,15 @@ namespace Egen_länkad_lista_lab
         }
 
 
-        // denna metoden används för att sortera listan
+        // Sorterar listan med hjälp av Merge Sort-algoritmen
+        //Snabbare med Merge sort istället för Quick sort eftersom det är en dubbel länkad lista
         public void SortList(bool ascending = true)
         {
             if (head == null || head.Next == null)
             {
                 return;
             }
+
 
             head = MergeSort(head, ascending);
 
@@ -280,6 +282,9 @@ namespace Egen_länkad_lista_lab
             }
             tail = current;
 
+
+            //// gamla sättet att sortera listan
+            
             //T[] array = ToArray();
             //Array.Sort(array);
             //Node<T> current = head;
@@ -293,27 +298,39 @@ namespace Egen_länkad_lista_lab
 
         private Node<T> MergeSort(Node<T> headNode, bool ascending)
         {
+            // Om den bara har en nod eller ingen nod alls, return.
             if (headNode == null || headNode.Next == null)
             {
                 return headNode;
             }
+
+            // Dela listan i två delar.
             Node<T> middle = GetMiddle(headNode);
             Node<T> nextOfMiddle = middle.Next;
+
+            // bryt listan i två delar.
             middle.Next = null;
+
+            // sortera vänstra och högra halvorna rekursivt.
             Node<T> left = MergeSort(headNode, ascending);
             Node<T> right = MergeSort(nextOfMiddle, ascending);
+
+            // Sortera och slå ihop de två sorterna listorna. sedan returnera den sorterade listan.
             Node<T> sortedList = Merge(left, right, ascending);
             return sortedList;
         }
 
+        // Hjälpmetod för att hitta mitten av listan
         private Node<T> GetMiddle(Node<T> headNode)
         {
             if (headNode == null)
             {
                 return headNode;
             }
-            Node<T> slow = headNode;
-            Node<T> fast = headNode;
+            Node<T> slow = headNode; // förflyttare med hastighet 1
+            Node<T> fast = headNode; // förflyttare med hastighet 2
+
+            // Använder två pekare (slow och fast) för att hitta mitten av listan.
             while (fast.Next != null && fast.Next.Next != null)
             {
                 slow = slow.Next;
@@ -322,6 +339,7 @@ namespace Egen_länkad_lista_lab
             return slow;
         }
 
+        // Hjälpmetod för att slå ihop två sorterade listor
         private Node<T> Merge(Node<T> left, Node<T> right, bool ascending)
         {
             Node<T> result = null;
@@ -335,6 +353,8 @@ namespace Egen_länkad_lista_lab
             }
             if (ascending)
             {
+                // Om left.Data är mindre än eller lika med right.Data,
+                // sätt left som head och slå ihop left.Next med right.
                 if (Comparer<T>.Default.Compare(left.Data, right.Data) <= 0)
                 {
                     result = left;
@@ -348,6 +368,8 @@ namespace Egen_länkad_lista_lab
             }
             else
             {
+                // Om left.Data är större än eller lika med right.Data, 
+                // sätt right som head och slå ihop left med right.Next.
                 if (Comparer<T>.Default.Compare(left.Data, right.Data) >= 0)
                 {
                     result = left;
