@@ -264,16 +264,102 @@ namespace Egen_länkad_lista_lab
 
 
         // denna metoden används för att sortera listan
-        public void SortList()
+        public void SortList(bool ascending = true)
         {
-            T[] array = ToArray();
-            Array.Sort(array);
-            Node<T> current = head;
-            for (int i = 0; i < count; i++)
+            if (head == null || head.Next == null)
             {
-                current.Data = array[i];
+                return;
+            }
+
+            head = MergeSort(head, ascending);
+
+            Node<T> current = head;
+            while (current.Next != null)
+            {
                 current = current.Next;
             }
+            tail = current;
+
+            //T[] array = ToArray();
+            //Array.Sort(array);
+            //Node<T> current = head;
+            //for (int i = 0; i < count; i++)
+            //{
+            //    current.Data = array[i];
+            //    current = current.Next;
+            //}
+        }
+
+
+        private Node<T> MergeSort(Node<T> headNode, bool ascending)
+        {
+            if (headNode == null || headNode.Next == null)
+            {
+                return headNode;
+            }
+            Node<T> middle = GetMiddle(headNode);
+            Node<T> nextOfMiddle = middle.Next;
+            middle.Next = null;
+            Node<T> left = MergeSort(headNode, ascending);
+            Node<T> right = MergeSort(nextOfMiddle, ascending);
+            Node<T> sortedList = Merge(left, right, ascending);
+            return sortedList;
+        }
+
+        private Node<T> GetMiddle(Node<T> headNode)
+        {
+            if (headNode == null)
+            {
+                return headNode;
+            }
+            Node<T> slow = headNode;
+            Node<T> fast = headNode;
+            while (fast.Next != null && fast.Next.Next != null)
+            {
+                slow = slow.Next;
+                fast = fast.Next.Next;
+            }
+            return slow;
+        }
+
+        private Node<T> Merge(Node<T> left, Node<T> right, bool ascending)
+        {
+            Node<T> result = null;
+            if (left == null)
+            {
+                return right;
+            }
+            if (right == null)
+            {
+                return left;
+            }
+            if (ascending)
+            {
+                if (Comparer<T>.Default.Compare(left.Data, right.Data) <= 0)
+                {
+                    result = left;
+                    result.Next = Merge(left.Next, right, ascending);
+                }
+                else
+                {
+                    result = right;
+                    result.Next = Merge(left, right.Next, ascending);
+                }
+            }
+            else
+            {
+                if (Comparer<T>.Default.Compare(left.Data, right.Data) >= 0)
+                {
+                    result = left;
+                    result.Next = Merge(left.Next, right, ascending);
+                }
+                else
+                {
+                    result = right;
+                    result.Next = Merge(left, right.Next, ascending);
+                }
+            }
+            return result;
         }
 
         // denna metoden används för att returnera en IEnumerator och använda foreach-loop
