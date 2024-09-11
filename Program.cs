@@ -59,7 +59,7 @@
 
             }
 
-            list.SortList();
+            list.SortList(ascending: true);
 
             Console.WriteLine("---------------");
 
