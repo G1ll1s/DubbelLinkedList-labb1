@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Egen_länkad_lista_lab
 {
+    /// <summary>
+    /// Oscar Gillberg
+    /// BUV23
+    /// Uppgift egen länkad lista
+    /// </summary>
     public class Node<T>
     {
         // Denna property används för att skapa en nod
