@@ -112,6 +112,7 @@ namespace Egen_länkad_lista_lab
             }
         }
 
+        // den här metoden är för att ta bort en nod från listan
         public bool Remove(T data)
         {
             Node<T> current = head;
